@@ -166,7 +166,19 @@ def nn_epoch(X, y, W1, W2, lr = 0.1, batch=100):
         None
     """
     ### BEGIN YOUR CODE
-    pass
+    num_examples = X_shape[0]
+    num_classes = W2.shape[1]
+
+    for i in range(0, num_examples, batch):
+        X_batch = X[i:i+batch]
+        y_batch = y[i:i+batch]
+
+        # Forward pass
+
+        Z1 = np.maximum(X_batch @ W1, 0)
+        logits = Z1 @ W2
+
+
     ### END YOUR CODE
 
 
