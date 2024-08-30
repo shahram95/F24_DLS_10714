@@ -47,7 +47,7 @@ void softmax_regression_epoch_cpp(const float *X, const unsigned char *y,
         // Copy current batch of X
         std::memcpy(X_batch, X + i * n, current_batch * n * sizeof(float));
 
-        // Compute Z = X_batch * theta (matmul)
+        // Compute Z = X_batch * theta (matmul) 
         for (size_t b = 0; b < current_batch; ++b) 
         {
             for (size_t j = 0; j < k; ++j) 
