@@ -68,6 +68,10 @@ def parse_mnist(image_filename, label_filename):
             label_data = f.read()
             y = np.frombuffer(label_data, dtype=np.uint8)
     
+        # Check consistency
+    if num_images != num_labels:
+        raise ValueError(f"Number of images ({num_images}) and labels ({num_labels}) do not match")
+    
     return X,y
     
 
