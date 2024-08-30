@@ -191,6 +191,16 @@ def nn_epoch(X, y, W1, W2, lr = 0.1, batch=100):
         loss_grad[np.arange(batch_size), y_batch] -= 1
         loss_grad /= batch_size
 
+        # Backward pass
+
+        dW2 = Z1.T @ loss_grad
+        dZ1 = loss_grad @ W2.T
+        dZ1[Z1==0] = 0
+        dW1 = X_batch.T @ dZ1
+
+        # Update weights
+        W1 -= lr * dW1
+        W2 -= lr * dW2
 
     ### END YOUR CODE
 
