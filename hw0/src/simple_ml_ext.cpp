@@ -39,7 +39,34 @@ void softmax_regression_epoch_cpp(const float *X, const unsigned char *y,
     float *grad = new float[n * k]
     float *X_batch = new float[batch * n]
 
+    // Process data in batches
+    for (size_t i = 0; i < m; i+= batch) 
+    {
+        size_t current_batch = std::min(batch, m - i)
+        std::memcpy(X_batch, X + i * n, current_batch * n * sizeof(float))
 
+        // Compute Z = X_batch * theta (matmul)
+        for (size_t b = 0; b < current_batch; ++b)
+        {
+            for (size_t j = 0; j < k; ++j)
+            {
+                Z[b * k + j] = 0
+                for (size_t l = 0; l < n; ++l)
+                {
+                    Z[b * k + j] += X_batch[b * n + l] * theta[l * k + j]
+                }
+            }
+        }
+
+        // Compute softmax
+
+        // Compute gradient
+
+        // Update theta
+
+        // Free allocated memory
+    
+    }
     /// END YOUR CODE
 }
 
