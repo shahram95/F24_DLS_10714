@@ -166,7 +166,7 @@ def nn_epoch(X, y, W1, W2, lr = 0.1, batch=100):
         None
     """
     ### BEGIN YOUR CODE
-    num_examples = X_shape[0]
+    num_examples = X.shape[0]
     num_classes = W2.shape[1]
 
     for i in range(0, num_examples, batch):
