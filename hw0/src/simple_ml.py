@@ -48,7 +48,21 @@ def parse_mnist(image_filename, label_filename):
                 for MNIST will contain the values 0-9.
     """
     ### BEGIN YOUR CODE
-    pass
+    # Read images
+    with gzip.open(image_filename, 'rb') as f:
+        magic, num_images, rows, cols = struct.unpack('>IIII', f.read(16))
+        if magic != 2051:
+                raise ValueError("Invalid magic number in image file")
+        
+        image_data = f.read()
+        images = np.frombuffer(image_data, dtype=np.uint8).reshape(num_images, rows * cols)
+        X = images.astype(np.float32) / 255.0
+
+    
+    return X
+    
+
+
     ### END YOUR CODE
 
 
