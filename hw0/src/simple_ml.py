@@ -118,7 +118,28 @@ def softmax_regression_epoch(X, y, theta, lr = 0.1, batch=100):
         None
     """
     ### BEGIN YOUR CODE
-    pass
+    num_examples = X.shape[0]
+    num_classes = theta.shape[1]
+
+    for i in range(0, num_examples, batch):
+        X_batch = X[i:i+batch]
+        y_batch = y[i:i+batch]
+
+        # Compute softmax probabilites
+        scores = X_batch @ theta
+        exp_scores = np.exp(scores - np.max(scores, axis=1, keepdims=True))
+        probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+
+        # Compute gradient
+        batch_size = X_batch.shape[0]
+        indicator = np.zeros((batch_size, num_classes))
+        indicator[np.arange(batch_size), y_batch] = 1
+        gradient = X_batch.T @ (probs - indicator) / batch_size
+
+        # Update theta
+        theta -= lr * gradient
+
+
     ### END YOUR CODE
 
 
