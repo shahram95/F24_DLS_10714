@@ -40,23 +40,41 @@ void softmax_regression_epoch_cpp(const float *X, const unsigned char *y,
     float *X_batch = new float[batch * n];
 
     // Process data in batches
-    for (size_t i = 0; i < m; i += batch) {
+    for (size_t i = 0; i < m; i += batch) 
+    {
         size_t current_batch = std::min(batch, m - i);
 
         // Copy current batch of X
         std::memcpy(X_batch, X + i * n, current_batch * n * sizeof(float));
 
         // Compute Z = X_batch * theta (matmul)
-        for (size_t b = 0; b < current_batch; ++b) {
-            for (size_t j = 0; j < k; ++j) {
+        for (size_t b = 0; b < current_batch; ++b) 
+        {
+            for (size_t j = 0; j < k; ++j) 
+            {
                 Z[b * k + j] = 0;
-                for (size_t l = 0; l < n; ++l) {
+                for (size_t l = 0; l < n; ++l) 
+                {
                     Z[b * k + j] += X_batch[b * n + l] * theta[l * k + j];
                 }
             }
         }
 
         // Compute softmax
+        for (size_t b = 0; b < current_batch; ++b) 
+        {
+            float max_val = *std::max_element(Z + b * k, Z + (b + 1) * k);
+            float sum = 0;
+            for (size_t j = 0; j < k; ++j) 
+            {
+                Z[b * k + j] = std::exp(Z[b * k + j] - max_val);
+                sum += Z[b * k + j];
+            }
+            for (size_t j = 0; j < k; ++j) 
+            {
+                Z[b * k + j] /= sum;
+            }
+        }
 
         // Compute gradient
 
