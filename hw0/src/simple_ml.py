@@ -179,10 +179,17 @@ def nn_epoch(X, y, W1, W2, lr = 0.1, batch=100):
         logits = Z1 @ W2
 
         # Compute softmax
+        
         logits_max = np.max(logits, axis=1, keepdims=True)
         exp_logits = np.exp(logits - logits_max)
         softmax_output = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
 
+        # Compute loss gradient
+
+        batch_size = X_batch.shape[0]
+        loss_grad = softmax_output.copy()
+        loss_grad[np.arange(batch_size), y_batch] -= 1
+        loss_grad /= batch_size
 
 
     ### END YOUR CODE
