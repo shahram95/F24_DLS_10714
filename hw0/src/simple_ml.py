@@ -58,8 +58,17 @@ def parse_mnist(image_filename, label_filename):
         images = np.frombuffer(image_data, dtype=np.uint8).reshape(num_images, rows * cols)
         X = images.astype(np.float32) / 255.0
 
+        # Read labels
+
+    with gzip.open(label_filename, 'rb') as f:
+            magic, num_labels = struct.unpack(">II", f.read(8))
+            if magic != 2049:
+                raise ValueError("Invalid magic number in label file")
+            
+            label_data = f.read()
+            y = np.frombuffer(label_data, dtype=np.uint8)
     
-    return X
+    return X,y
     
 
 
