@@ -198,7 +198,7 @@ def nn_epoch(X, y, W1, W2, lr = 0.1, batch=100):
         dZ1[Z1==0] = 0
         dW1 = X_batch.T @ dZ1
 
-        # Update weight
+        # Update weights
         W1 -= lr * dW1
         W2 -= lr * dW2
 
