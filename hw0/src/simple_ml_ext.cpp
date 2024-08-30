@@ -33,6 +33,12 @@ void softmax_regression_epoch_cpp(const float *X, const unsigned char *y,
      */
 
     /// BEGIN YOUR CODE
+    
+    // Allocate memory for temp arrays
+    float *Z = new float[batch * k]
+    float *grad = new float[n * k]
+    float *X_batch = new float[batch * n]
+
 
     /// END YOUR CODE
 }
