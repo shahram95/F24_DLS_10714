@@ -77,12 +77,33 @@ void softmax_regression_epoch_cpp(const float *X, const unsigned char *y,
         }
 
         // Compute gradient
+        std::memset(grad, 0, n * k * sizeof(float));
+        for (size_t b = 0; b < current_batch; ++b) 
+        {
+            for (size_t j = 0; j < k; ++j) 
+            {
+                float coeff = (j == y[i + b]) ? Z[b * k + j] - 1 : Z[b * k + j];
+                for (size_t l = 0; l < n; ++l) 
+                {
+                    grad[l * k + j] += X_batch[b * n + l] * coeff;
+                }
+            }
+        }
 
         // Update theta
+        float scale = lr / current_batch;
+        for (size_t j = 0; j < n * k; ++j) 
+        {
+            theta[j] -= scale * grad[j];
+        }
 
     }
 
     // Free allocated memory
+
+    delete[] Z;
+    delete[] grad;
+    delete[] X_batch;
 
     /// END YOUR CODE
 }
