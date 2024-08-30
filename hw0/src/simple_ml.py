@@ -136,7 +136,7 @@ def softmax_regression_epoch(X, y, theta, lr = 0.1, batch=100):
         indicator[np.arange(batch_size), y_batch] = 1
         gradient = X_batch.T @ (probs - indicator) / batch_size
 
-        # Update theta
+        # Update theta with gradient
         theta -= lr * gradient
 
 
