@@ -178,6 +178,12 @@ def nn_epoch(X, y, W1, W2, lr = 0.1, batch=100):
         Z1 = np.maximum(X_batch @ W1, 0)
         logits = Z1 @ W2
 
+        # Compute softmax
+        logits_max = np.max(logits, axis=1, keepdims=True)
+        exp_logits = np.exp(logits - logits_max)
+        softmax_output = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
+
+
 
     ### END YOUR CODE
 
