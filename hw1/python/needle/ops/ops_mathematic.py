@@ -79,7 +79,13 @@ class EWisePow(TensorOp):
         
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        if not isinstance(node.inputs[0], NDArray) or not isinstance(node.inputs[1], NDArray):
+            raise ValueError("Expected tensors (NDArray) as inputs")
+
+        a, b = node.inputs[0], node.inputs[1]
+        grad_a = out_grad * b * (a ** (b-1))
+        grad_b = out_grad * (a ** b) * log(a)
+        return grad_a, grad_b
         ### END YOUR SOLUTION
 
 def power(a, b):
