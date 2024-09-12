@@ -211,7 +211,7 @@ class BroadcastTo(TensorOp):
         sum_axes = [i for i, (in_dim, out_dim) in enumerate(zip(aligned_input_shape, out_shape)) if in_dim != out_dim]
         
         return summation(out_grad, axes=tuple(sum_axes)).reshape(input_shape)
-        ### END YOUR SOLUTION
+        ### END YOUR SOLUTIO
 
 
 def broadcast_to(a, shape):
