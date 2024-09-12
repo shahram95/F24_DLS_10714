@@ -99,7 +99,8 @@ class PowerScalar(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        input_tensor = node.inputs[0]
+        return out_grad * self.scalar * power_scalar(input_tensor, self.scalar - 1)
         ### END YOUR SOLUTION
 
 
@@ -117,7 +118,10 @@ class EWiseDiv(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        lhs, rhs = node.inputs
+        grad_lhs = out_grad / rhs
+        grad_rhs = out_grad * negate(lhs / (rhs ** 2))
+        return grad_lhs, grad_rhs
         ### END YOUR SOLUTION
 
 
@@ -136,7 +140,7 @@ class DivScalar(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        return divide_scalar(out_grad, self.scalar)
         ### END YOUR SOLUTION
 
 
@@ -218,7 +222,12 @@ class Summation(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        input_shape = node.inputs[0].shape
+        axes = range(len(input_shape)) if self.axes is None else self.axes
+
+        reshape_shape = [1 if i in axes else s for i,s in enumerate(input_shape)]
+
+        return broadcast_to(reshape(out_grad, tuple(reshape_shape)), input_shape)
         ### END YOUR SOLUTION
 
 
@@ -234,7 +243,19 @@ class MatMul(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        lhs, rhs = node.inputs
+        lhs_grad = matmul(out_grad, transpose(rhs))
+        rhs_grad = matmul(transpose(lhs), out_grad)
+
+        # Handle batch dimensions
+        if len(lhs.shape) < len(lhs_grad.shape):
+            sum_axes = tuple(range(len(lhs_grad.shape) - len(lhs.shape)))
+            lhs_grad = summation(lhs_grad, axes=sum_axes)
+        if len(rhs.shape) < len(rhs_grad.shape):
+            sum_axes = tuple(range(len(rhs_grad.shape) - len(rhs.shape)))
+            rhs_grad = summation(rhs_grad, axes=sum_axes)
+        
+        return lhs_grad, rhs_grad
         ### END YOUR SOLUTION
 
 
