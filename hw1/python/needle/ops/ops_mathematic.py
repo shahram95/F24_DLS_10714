@@ -330,7 +330,10 @@ class ReLU(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        # ReLU is not twice differentiable, so it's acceptable to use realize_cached_data
+        a = node.inputs[0].realize_cached_data()
+        mask = a > 0
+        return out_grad * Tensor(mask)
         ### END YOUR SOLUTION
 
 
