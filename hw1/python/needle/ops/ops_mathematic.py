@@ -325,7 +325,7 @@ def exp(a):
 class ReLU(TensorOp):
     def compute(self, a):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        return array_api.maximum(a,0)
         ### END YOUR SOLUTION
 
     def gradient(self, out_grad, node):
