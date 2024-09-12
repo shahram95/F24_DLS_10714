@@ -203,7 +203,14 @@ class BroadcastTo(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        input_shape = node.inputs[0].shape
+        out_shape = self.shape
+
+        aligned_input_shape = (1,) * (len(out_shape) - len(input_shape)) + input_shape
+
+        sum_axes = [i for i, (in_dim, out_dim) in enumerate(zip(aligned_input_shape, out_shape)) if in_dim != out_dim]
+        
+        return summation(out_grad, axes=tuple(sum_axes)).reshape(input_shape)
         ### END YOUR SOLUTION
 
 
