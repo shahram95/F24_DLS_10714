@@ -295,7 +295,7 @@ class Log(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        return out_grad / node.inputs[0]
         ### END YOUR SOLUTION
 
 
@@ -311,7 +311,7 @@ class Exp(TensorOp):
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        return out_grad / node.inputs[0]
+        raise NotImplementedError()
         ### END YOUR SOLUTION
 
 
