@@ -109,7 +109,29 @@ def nn_epoch(X, y, W1, W2, lr=0.1, batch=100):
     """
 
     ### BEGIN YOUR SOLUTION
-    raise NotImplementedError()
+    num_examples = X.shape[0]
+    for i in range(0, num_examples, batch):
+        X_batch = ndl.Tensor(X[i:i+batch])
+        y_batch = y[i:i+batch]
+
+        # Forward pass
+        Z1 = ndl.relu(ndl.matmul(X_batch,W1))
+        Z2 = ndl.matmul(Z1,W2)
+
+        # One-hot encoding of labels
+        y_one_hot = np.zeros((Z2.shape[0], W2.shape[1]), dtype="float32")
+        y_one_hot[np.arange(Z2.shape[0]), y_batch] = 1
+        y_one_hot = ndl.Tensor(y_one_hot)
+
+        # Loss and backprop
+        loss = softmax_loss(Z2, y_one_hot)
+        loss.backward()
+
+        # Weight update
+        W1 = (W1 - lr * W1.grad).detach()
+        W2 = (W2 - lr * W2.grad).detach()
+    
+    return W1, W2
     ### END YOUR SOLUTION
 
 
