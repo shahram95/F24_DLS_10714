@@ -39,7 +39,11 @@ class LogSumExp(TensorOp):
         exp_Z = exp(Z - Z.realize_cached_data().max(axis=self.axes, keepdims=True))
         sum_exp_Z = summation(exp_Z, axes=self.axes)
         grad = out_grad / sum_exp_Z
-        return grad.reshape(tuple(1 if self.axes and i in self.axes else s for i, s in enumerate(Z.shape))).broadcast_to(Z.shape) * exp_Z
+
+        if self.axes is None:
+            return grad.broadcast_to(Z.shape) * exp_Z
+        grad_shape = [1 if i in self.axes else s for i, s in enumerate(Z.shape)]
+        return grad.reshape(grad_shape).broadcast_to(Z.shape) * exp_Z
         ### END YOUR SOLUTION
 
 
