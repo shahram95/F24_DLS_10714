@@ -67,5 +67,19 @@ class Adam(Optimizer):
 
     def step(self):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        self.t += 1
+        for param in self.params:
+            if param not in self.m:
+                self.m[param] = ndl.init.zeros(*param.shape, dtype=param.dtype, device=param.device)
+                self.v[param] = ndl.init.zeros(*param.shape, dtype=param.dtype, device=param.device)
+
+            grad = param.grad.data + self.weight_decay * param.data
+
+            self.m[param] = self.beta1 * self.m[param] + (1 - self.beta1) * grad
+            self.v[param] = self.beta2 * self.v[param] + (1 - self.beta2) * (grad ** 2)
+
+            m_hat = self.m[param] / (1 - self.beta1 ** self.t)
+            v_hat = self.v[param] / (1 - self.beta2 ** self.t)
+
+            param.data = param.data - self.lr * m_hat / (v_hat ** 0.5 + self.eps)
         ### END YOUR SOLUTION
