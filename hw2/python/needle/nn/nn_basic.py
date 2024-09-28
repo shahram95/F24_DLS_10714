@@ -153,21 +153,21 @@ class BatchNorm1d(Module):
 
     def forward(self, x: Tensor) -> Tensor:
         ### BEGIN YOUR SOLUTION
+        batch_size, feature_dim = x.shape
         if self.training:
-            batch_mean = ops.summation(x, axes=(0,)) / x.shape[0]
-            x_minus_mean = x - batch_mean.broadcast_to(x.shape)
-            batch_var = ops.summation(x_minus_mean ** 2, axes=(0,)) / x.shape[0]
-
-            self.running_mean = (1 - self.momentum) * self.running_mean + self.momentum * batch_mean.data
-            self.running_var = (1 - self.momentum) * self.running_var + self.momentum * batch_var.data
-
-            norm = x_minus_mean / (batch_var + self.eps) ** 0.5
-        
+            mean = ops.summation(x, axes=(0,)) / batch_size
+            x_centered = x - mean.broadcast_to(x.shape)
+            var = ops.summation(x_centered ** 2, axes=(0,)) / batch_size
+            
+            self.running_mean = (1 - self.momentum) * self.running_mean + self.momentum * mean.data
+            self.running_var = (1 - self.momentum) * self.running_var + self.momentum * var.data
+            
+            norm = x_centered / ((var + self.eps) ** 0.5).broadcast_to(x.shape)
         else:
-            norm = (x - self.running_mean.broadcast_to(x.shape)) / (self.running_var + self.eps) ** 0.5
-        
+            norm = (x - self.running_mean.broadcast_to(x.shape)) / ((self.running_var + self.eps) ** 0.5).broadcast_to(x.shape)
 
-        return self.weight.broadcast_to(x.shape) * norm.broadcast_to(x.shape) + self.bias.broadcast_to(x.shape)
+        return self.weight.broadcast_to(x.shape) * norm + self.bias.broadcast_to(x.shape)
+
         ### END YOUR SOLUTION
 
 
