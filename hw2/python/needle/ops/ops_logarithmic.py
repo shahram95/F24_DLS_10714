@@ -10,12 +10,18 @@ import numpy as array_api
 class LogSoftmax(TensorOp):
     def compute(self, Z):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        max_Z = Z.max(axis=-1, keepdims=True)
+        exp_Z = array_api.exp(Z - max_Z)
+        sum_exp_Z = exp_Z.sum(axis=-1, keepdims=True)
+        return Z - max_Z - array_api.log(sum_exp_Z)
         ### END YOUR SOLUTION
 
     def gradient(self, out_grad, node):
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        Z = node.inputs[0]
+        softmax = exp(self(Z))
+        sum_out_grad = summation(out_grad, axes=(-1,))
+        return out_grad - softmax * reshape(sum_out_grad, sum_out_grad.shape + (1,))
         ### END YOUR SOLUTION
 
 
