@@ -26,5 +26,7 @@ def kaiming_uniform(fan_in, fan_out, nonlinearity="relu", **kwargs):
 def kaiming_normal(fan_in, fan_out, nonlinearity="relu", **kwargs):
     assert nonlinearity == "relu", "Only relu supported currently"
     ### BEGIN YOUR SOLUTION
-    raise NotImplementedError()
+    gain = 2  ** 0.5
+    std = gain * (1.0 / fan_in) ** 0.5
+    return randn(fan_in, fan_out, mean=0, std=std, **kwargs)
     ### END YOUR SOLUTION
