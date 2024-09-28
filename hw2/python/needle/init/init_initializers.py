@@ -11,7 +11,8 @@ def xavier_uniform(fan_in, fan_out, gain=1.0, **kwargs):
 
 def xavier_normal(fan_in, fan_out, gain=1.0, **kwargs):
     ### BEGIN YOUR SOLUTION
-    raise NotImplementedError()
+    std = gain * (2 / (fan_in + fan_out)) ** 0.5
+    return randn(fan_in, fan_out, mean = 0, std=std, ** kwargs)
     ### END YOUR SOLUTION
 
 def kaiming_uniform(fan_in, fan_out, nonlinearity="relu", **kwargs):
