@@ -47,9 +47,18 @@ class MNISTDataset(Dataset):
         ### BEGIN YOUR SOLUTION
         image, label = self.imgs[index], self.labels[index]
         
-        image = image.reshape(28, 28, 1)
+        # image = image.reshape(28, 28, 1)
+        # if self.transforms:
+        #     image = self.apply_transforms(image)
+        # return image, label
+        if isinstance(index, int):
+            image = image.reshape(28, 28, 1)
+        else:
+            image = image.reshape(-1, 28, 28, 1)
+        
         if self.transforms:
             image = self.apply_transforms(image)
+        
         return image, label
             
         ### END YOUR SOLUTION
