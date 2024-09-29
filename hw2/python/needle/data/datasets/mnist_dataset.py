@@ -17,23 +17,25 @@ class MNISTDataset(Dataset):
         with gzip.open(image_filename, 'rb') as f:
             magic, num_images, rows, cols = struct.unpack('>IIII', f.read(16))
             if magic != 2051:
-                    raise ValueError("Invalid magic number in image file")
+                raise ValueError("Invalid magic number in image file")
             
-            image_data = f.read()
+            # Read the exact number of bytes
+            image_data = f.read(num_images * rows * cols)
             images = np.frombuffer(image_data, dtype=np.uint8).reshape(num_images, rows * cols)
             X = images.astype(np.float32) / 255.0
 
             # Read labels
 
         with gzip.open(label_filename, 'rb') as f:
-                magic, num_labels = struct.unpack(">II", f.read(8))
-                if magic != 2049:
-                    raise ValueError("Invalid magic number in label file")
-                
-                label_data = f.read()
-                y = np.frombuffer(label_data, dtype=np.uint8)
+            magic, num_labels = struct.unpack(">II", f.read(8))
+            if magic != 2049:
+                raise ValueError("Invalid magic number in label file")
+            
+            # Read the exact number of bytes
+            label_data = f.read(num_labels)
+            y = np.frombuffer(label_data, dtype=np.uint8)
         
-            # Check consistency
+        # Check consistency
         if num_images != num_labels:
             raise ValueError(f"Number of images ({num_images}) and labels ({num_labels}) do not match")
         
@@ -44,12 +46,10 @@ class MNISTDataset(Dataset):
     def __getitem__(self, index) -> object:
         ### BEGIN YOUR SOLUTION
         image, label = self.imgs[index], self.labels[index]
-
-        if self.transforms:
-            image = image.reshape(28, 28, 1)
-            image = self.apply_transforms(image)
-            image = image.reshape(-1)
         
+        image = image.reshape(28, 28, 1)
+        if self.transforms:
+            image = self.apply_transforms(image)
         return image, label
             
         ### END YOUR SOLUTION
