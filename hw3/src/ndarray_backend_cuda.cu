@@ -154,7 +154,17 @@ void EwiseSetitem(const CudaArray& a, CudaArray* out, std::vector<int32_t> shape
    *   offset: offset of the *out* array (not a, which has zero offset, being compact)
    */
   /// BEGIN SOLUTION
-  assert(false && "Not Implemented");
+  size_t gid = blockIdx.x * blockDim.x + threadIdx.x;
+  if (gid < size) {
+    size_t out_index = offset;
+    size_t remaining = gid;
+    for (int32_t i = shape.size - 1; i >= 0; --i) {
+      size_t coord = remaining % shape.data[i];
+      out_index += coord * strides.data[i];
+      remaining /= shape.data[i];
+    }
+    out[out_index] = a[gid];
+  }
   /// END SOLUTION
 }
 
