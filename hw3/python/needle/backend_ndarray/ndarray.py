@@ -247,7 +247,18 @@ class NDArray:
         """
 
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        if not self.is_compact():
+            raise ValueError("Cannot reshape a non-compact array!")
+        
+        if self.size != prod(new_shape):
+            raise ValueError(f"Cannot reshape array of size {self.size} into shape {new_shape}")
+
+        if self.shape == new_shape:
+            return self
+        
+        new_strides = self.compact_strides(new_shape)
+
+        return NDArray.make(new_shape, strides=new_strides, device=self.device, handle=self._handle, offset=self._offset)
         ### END YOUR SOLUTION
 
     def permute(self, new_axes):
