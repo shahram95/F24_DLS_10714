@@ -62,7 +62,27 @@ void Compact(const AlignedArray& a, AlignedArray* out, std::vector<int32_t> shap
    *  function will implement here, so we won't repeat this note.)
    */
   /// BEGIN SOLUTION
-  assert(false && "Not Implemented");
+  std::vector<int32_t> indices(shape.size(), 0);
+  size_t out_idx = 0;
+
+  while (true) {
+    size_t in_idx = offset;
+    for (size_t i=0; i < shape.size(); ++i){
+      in_idx += indices[i] * strides[i];
+    }
+
+    out->ptr[out_idx++] = a.ptr[in_idx];
+
+    for (int32_t i = shape.size() -1; i >= 0; --i){
+      if (++indices[i] < shape[i]){
+        break;
+      }
+      indices[i] = 0;
+      if (i == 0) {
+        return;
+      }
+    }
+  }
   /// END SOLUTION
 }
 
@@ -79,7 +99,28 @@ void EwiseSetitem(const AlignedArray& a, AlignedArray* out, std::vector<int32_t>
    *   offset: offset of the *out* array (not a, which has zero offset, being compact)
    */
   /// BEGIN SOLUTION
-  assert(false && "Not Implemented");
+  std::vector<int32_t> indices(shape.size(), 0);
+  size_t a_idx = 0;
+
+  while (true){
+    size_t out_idx = offset;
+    for (size_t i = 0; i < shape.size(); ++i){
+      out_idx += indices[i] * strides[i];
+    }
+
+    out->ptr[out_idx] = a.ptr[a_idx++];
+
+    for (int32_t i = shape.size() - 1; i >= 0; --i){
+      if (++indices[i] < shape[i]){
+        break;
+      }
+      
+    indices[i] = 0;
+    if (i == 0){
+      return;
+    }
+  }
+  }
   /// END SOLUTION
 }
 
