@@ -205,6 +205,27 @@ void ScalarAdd(const AlignedArray& a, scalar_t val, AlignedArray* out) {
  * functions (however you want to do so, as long as the functions match the proper)
  * signatures above.
  */
+template<typename Op>
+void EwiseOp(const AlignedArray& a, const AlignedArray& b, AlignedArray* out, Op op) {
+    for (size_t i = 0; i < a.size; i++) {
+        out->ptr[i] = op(a.ptr[i], b.ptr[i]);
+    }
+}
+
+template<typename Op>
+void ScalarOp(const AlignedArray& a, scalar_t val, AlignedArray* out, Op op) {
+    for (size_t i = 0; i < a.size; i++) {
+        out->ptr[i] = op(a.ptr[i], val);
+    }
+}
+
+template<typename Op>
+void UnaryOp(const AlignedArray& a, AlignedArray* out, Op op) {
+    for (size_t i = 0; i < a.size; i++) {
+        out->ptr[i] = op(a.ptr[i]);
+    }
+}
+
 
 
 void Matmul(const AlignedArray& a, const AlignedArray& b, AlignedArray* out, uint32_t m, uint32_t n,
