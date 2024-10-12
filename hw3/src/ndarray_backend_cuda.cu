@@ -425,6 +425,45 @@ void EwiseTanh(const CudaArray& a, CudaArray* out) {
 // Elementwise and scalar operations
 ////////////////////////////////////////////////////////////////////////////////
 
+#define TILE_SIZE 32
+
+__global__ void MatmulKernel(const scalar_t* A, const scalar_t* B, scalar_t* C, 
+                             uint32_t M, uint32_t N, uint32_t P) {
+    __shared__ scalar_t As[TILE_SIZE][TILE_SIZE];
+    __shared__ scalar_t Bs[TILE_SIZE][TILE_SIZE];
+    
+    int bx = blockIdx.x;
+    int by = blockIdx.y;
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+    
+    int row = by * TILE_SIZE + ty;
+    int col = bx * TILE_SIZE + tx;
+    
+    scalar_t sum = 0.0f;
+    
+    for (int i = 0; i < (N + TILE_SIZE - 1) / TILE_SIZE; i++) {
+        if (row < M && i * TILE_SIZE + tx < N)
+            As[ty][tx] = A[row * N + i * TILE_SIZE + tx];
+        else
+            As[ty][tx] = 0.0f;
+        
+        if (col < P && i * TILE_SIZE + ty < N)
+            Bs[ty][tx] = B[(i * TILE_SIZE + ty) * P + col];
+        else
+            Bs[ty][tx] = 0.0f;
+        
+        __syncthreads();
+        
+        for (int k = 0; k < TILE_SIZE; k++)
+            sum += As[ty][k] * Bs[k][tx];
+        
+        __syncthreads();
+    }
+    
+    if (row < M && col < P)
+        C[row * P + col] = sum;
+}
 
 void Matmul(const CudaArray& a, const CudaArray& b, CudaArray* out, uint32_t M, uint32_t N,
             uint32_t P) {
@@ -451,7 +490,10 @@ void Matmul(const CudaArray& a, const CudaArray& b, CudaArray* out, uint32_t M, 
    */
 
   /// BEGIN SOLUTION
-  assert(false && "Not Implemented");
+  dim3 gridDim((P + TILE_SIZE - 1) / TILE_SIZE, (M + TILE_SIZE - 1) / TILE_SIZE);
+  dim3 blockDim(TILE_SIZE, TILE_SIZE);
+    
+  MatmulKernel<<<gridDim, blockDim>>>(a.ptr, b.ptr, out->ptr, M, N, P);
   /// END SOLUTION
 }
 
@@ -580,7 +622,7 @@ PYBIND11_MODULE(ndarray_backend_cuda, m) {
   m.def("ewise_exp", EwiseExp);
   m.def("ewise_tanh", EwiseTanh);
 
-  // m.def("matmul", Matmul);
+  m.def("matmul", Matmul);
 
   m.def("reduce_max", ReduceMax);
   m.def("reduce_sum", ReduceSum);
