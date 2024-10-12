@@ -283,7 +283,19 @@ class NDArray:
         """
 
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        if len(new_axes) != len(self.shape):
+            raise ValueError(f"Length of new_axes {len(new_axes)} does not match the number of dimensions {len(self.shape)}")
+        
+        if set(new_axes) != set(range(len(self.shape))):
+            raise ValueError(f"Invalid permutation axes: {new_axes}")
+        
+        if new_axes == tuple(range(len(self.shape))):
+            return self
+        
+        new_shape = tuple(self.shape[i] for i in new_axes)
+        new_strides = tuple(self.strides[i] for i in new_axes)
+
+        return self.as_strided(shape=new_shape, strides=new_strides)
         ### END YOUR SOLUTION
 
     def broadcast_to(self, new_shape):
