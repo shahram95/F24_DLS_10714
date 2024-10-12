@@ -327,6 +327,9 @@ CUDA_nppial_LIBRARY:FILEPATH=/usr/local/cuda-12.6/lib64/libnppial.so
 //"nppicc" library
 CUDA_nppicc_LIBRARY:FILEPATH=/usr/local/cuda-12.6/lib64/libnppicc.so
 
+//"nppicom" library
+CUDA_nppicom_LIBRARY:FILEPATH=CUDA_nppicom_LIBRARY-NOTFOUND
+
 //"nppidei" library
 CUDA_nppidei_LIBRARY:FILEPATH=/usr/local/cuda-12.6/lib64/libnppidei.so
 
@@ -356,6 +359,12 @@ CUDA_nvToolsExt_LIBRARY:FILEPATH=/usr/local/cuda-12.6/lib64/libnvToolsExt.so
 
 //Path to a library.
 CUDA_rt_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
+
+//Path to a library.
+Python_LIBRARY_DEBUG:FILEPATH=
+
+//Path to a library.
+Python_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libpython3.8.so
 
 //Dependencies for the target
 ndarray_backend_cuda_LIB_DEPENDS:STATIC=general;/usr/local/cuda-12.6/lib64/libcudart_static.a;general;dl;general;/usr/lib/x86_64-linux-gnu/librt.so;general;/usr/local/cuda-12.6/lib64/libcudart.so;
@@ -463,6 +472,8 @@ CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=
 CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
 //Have library pthread
 CMAKE_HAVE_PTHREAD_CREATE:INTERNAL=1
+//Have include pthread.h
+CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/home/gordian/Desktop/F24_DLS_10714/hw3
@@ -608,6 +619,8 @@ CUDA_nppc_LIBRARY-ADVANCED:INTERNAL=1
 CUDA_nppial_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_nppicc_LIBRARY
 CUDA_nppicc_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CUDA_nppicom_LIBRARY
+CUDA_nppicom_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_nppidei_LIBRARY
 CUDA_nppidei_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_nppif_LIBRARY
@@ -646,6 +659,10 @@ PYBIND11_PYTHON_EXECUTABLE_LAST:INTERNAL=/home/gordian/anaconda3/envs/10714_env/
 PYTHON_IS_DEBUG:INTERNAL=0
 PYTHON_MODULE_DEBUG_POSTFIX:INTERNAL=
 PYTHON_MODULE_EXTENSION:INTERNAL=.cpython-312-x86_64-linux-gnu.so
+//ADVANCED property for variable: Python_LIBRARY_DEBUG
+Python_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Python_LIBRARY_RELEASE
+Python_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 _PYBIND11_CROSSCOMPILING:INTERNAL=OFF
@@ -654,6 +671,7 @@ _Python:INTERNAL=Python
 _Python_Compiler_REASON_FAILURE:INTERNAL=
 _Python_DEVELOPMENT_EMBED_SIGNATURE:INTERNAL=a02d5aeaf4df154bdabb33c59810b742
 _Python_DEVELOPMENT_MODULE_SIGNATURE:INTERNAL=851d481204c756e90844c1d9c7e416b9
+_Python_DEVELOPMENT_SIGNATURE:INTERNAL=062f9920f531c9d992196716d4141fd6
 //Development reason failure
 _Python_Development_REASON_FAILURE:INTERNAL=
 //Path to a program.
@@ -663,8 +681,6 @@ _Python_INCLUDE_DIR:INTERNAL=/home/gordian/anaconda3/envs/10714_env/include/pyth
 //Python Properties
 _Python_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;7;64;<none>;cpython-312-x86_64-linux-gnu;abi3;/home/gordian/anaconda3/envs/10714_env/lib/python3.12;/home/gordian/anaconda3/envs/10714_env/lib/python3.12;/home/gordian/anaconda3/envs/10714_env/lib/python3.12/site-packages;/home/gordian/anaconda3/envs/10714_env/lib/python3.12/site-packages
 _Python_INTERPRETER_SIGNATURE:INTERNAL=4836fe890142a6fc02b1e2a9c0151667
-//Interpreter reason failure
-_Python_Interpreter_REASON_FAILURE:INTERNAL=
 //Path to a library.
 _Python_LIBRARY_RELEASE:INTERNAL=/home/gordian/anaconda3/envs/10714_env/lib/libpython3.12.so
 //NumPy reason failure
@@ -673,6 +689,6 @@ _Python_NumPy_REASON_FAILURE:INTERNAL=
 compile_result:INTERNAL=TRUE
 //Directories where pybind11 and possibly Python headers are located
 pybind11_INCLUDE_DIRS:INTERNAL=/home/gordian/anaconda3/envs/10714_env/lib/python3.12/site-packages/pybind11/include;/home/gordian/anaconda3/envs/10714_env/include/python3.12
-//Result of try_run()
+//Result of TRY_RUN
 run_result:INTERNAL=0
 
