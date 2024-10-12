@@ -319,7 +319,23 @@ class NDArray:
         """
 
         ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
+        if len(new_shape) < len(self.shape):
+            raise ValueError("cannot broadcast to fewer dimensions")
+        
+        original_shape =(1,) * (len(new_shape) - len(self.shape)) + self.shape
+        original_strides = (0,) * (len(new_shape) - len(self.shape)) + self.strides
+
+        new_strides = []
+
+        for i in range(len(new_shape)):
+            if original_shape[i] == new_shape[i]:
+                new_strides.append(original_strides[i])
+            elif original_shape[i] == 1:
+                new_strides.append(0)
+            else:
+                raise ValueError(f"Cannot broadcast shape {self.shape} to {new_shape}")
+
+        return self.as_strided(shape=new_shape, strides=tuple(new_strides)) 
         ### END YOUR SOLUTION
 
     ### Get and set elements
