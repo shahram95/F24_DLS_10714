@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
+#include <functional>
 
 namespace needle {
 namespace cpu {
@@ -167,23 +169,23 @@ void ScalarSetitem(const size_t size, scalar_t val, AlignedArray* out, std::vect
   /// END SOLUTION
 }
 
-void EwiseAdd(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
-  /**
-   * Set entries in out to be the sum of correspondings entires in a and b.
-   */
-  for (size_t i = 0; i < a.size; i++) {
-    out->ptr[i] = a.ptr[i] + b.ptr[i];
-  }
-}
+// void EwiseAdd(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
+//   /**
+//    * Set entries in out to be the sum of correspondings entires in a and b.
+//    */
+//   for (size_t i = 0; i < a.size; i++) {
+//     out->ptr[i] = a.ptr[i] + b.ptr[i];
+//   }
+// }
 
-void ScalarAdd(const AlignedArray& a, scalar_t val, AlignedArray* out) {
-  /**
-   * Set entries in out to be the sum of corresponding entry in a plus the scalar val.
-   */
-  for (size_t i = 0; i < a.size; i++) {
-    out->ptr[i] = a.ptr[i] + val;
-  }
-}
+// void ScalarAdd(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+//   /**
+//    * Set entries in out to be the sum of corresponding entry in a plus the scalar val.
+//    */
+//   for (size_t i = 0; i < a.size; i++) {
+//     out->ptr[i] = a.ptr[i] + val;
+//   }
+// }
 
 
 /**
@@ -226,6 +228,69 @@ void UnaryOp(const AlignedArray& a, AlignedArray* out, Op op) {
     }
 }
 
+void EwiseAdd(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
+    EwiseOp(a, b, out, std::plus<scalar_t>());
+}
+
+void EwiseMul(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
+    EwiseOp(a, b, out, std::multiplies<scalar_t>());
+}
+
+void EwiseDiv(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
+    EwiseOp(a, b, out, std::divides<scalar_t>());
+}
+
+void EwiseMaximum(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
+    EwiseOp(a, b, out, [](scalar_t x, scalar_t y) { return std::max(x, y); });
+}
+
+void EwiseEq(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
+    EwiseOp(a, b, out, [](scalar_t x, scalar_t y) { return scalar_t(x == y); });
+}
+
+void EwiseGe(const AlignedArray& a, const AlignedArray& b, AlignedArray* out) {
+    EwiseOp(a, b, out, [](scalar_t x, scalar_t y) { return scalar_t(x >= y); });
+}
+
+void ScalarAdd(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+    ScalarOp(a, val, out, std::plus<scalar_t>());
+}
+
+void ScalarMul(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+    ScalarOp(a, val, out, std::multiplies<scalar_t>());
+}
+
+void ScalarDiv(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+    ScalarOp(a, val, out, std::divides<scalar_t>());
+}
+
+void ScalarPower(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+    ScalarOp(a, val, out, [](scalar_t x, scalar_t y) { return std::pow(x, y); });
+}
+
+void ScalarMaximum(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+    ScalarOp(a, val, out, [](scalar_t x, scalar_t y) { return std::max(x, y); });
+}
+
+void ScalarEq(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+    ScalarOp(a, val, out, [](scalar_t x, scalar_t y) { return scalar_t(x == y); });
+}
+
+void ScalarGe(const AlignedArray& a, scalar_t val, AlignedArray* out) {
+    ScalarOp(a, val, out, [](scalar_t x, scalar_t y) { return scalar_t(x >= y); });
+}
+
+void EwiseLog(const AlignedArray& a, AlignedArray* out) {
+    UnaryOp(a, out, [](scalar_t x) { return std::log(x); });
+}
+
+void EwiseExp(const AlignedArray& a, AlignedArray* out) {
+    UnaryOp(a, out, [](scalar_t x) { return std::exp(x); });
+}
+
+void EwiseTanh(const AlignedArray& a, AlignedArray* out) {
+    UnaryOp(a, out, [](scalar_t x) { return std::tanh(x); });
+}
 
 
 void Matmul(const AlignedArray& a, const AlignedArray& b, AlignedArray* out, uint32_t m, uint32_t n,
@@ -372,26 +437,26 @@ PYBIND11_MODULE(ndarray_backend_cpu, m) {
   m.def("ewise_add", EwiseAdd);
   m.def("scalar_add", ScalarAdd);
 
-  // m.def("ewise_mul", EwiseMul);
-  // m.def("scalar_mul", ScalarMul);
-  // m.def("ewise_div", EwiseDiv);
-  // m.def("scalar_div", ScalarDiv);
-  // m.def("scalar_power", ScalarPower);
+  m.def("ewise_mul", EwiseMul);
+  m.def("scalar_mul", ScalarMul);
+  m.def("ewise_div", EwiseDiv);
+  m.def("scalar_div", ScalarDiv);
+  m.def("scalar_power", ScalarPower);
 
-  // m.def("ewise_maximum", EwiseMaximum);
-  // m.def("scalar_maximum", ScalarMaximum);
-  // m.def("ewise_eq", EwiseEq);
-  // m.def("scalar_eq", ScalarEq);
-  // m.def("ewise_ge", EwiseGe);
-  // m.def("scalar_ge", ScalarGe);
+  m.def("ewise_maximum", EwiseMaximum);
+  m.def("scalar_maximum", ScalarMaximum);
+  m.def("ewise_eq", EwiseEq);
+  m.def("scalar_eq", ScalarEq);
+  m.def("ewise_ge", EwiseGe);
+  m.def("scalar_ge", ScalarGe);
 
-  // m.def("ewise_log", EwiseLog);
-  // m.def("ewise_exp", EwiseExp);
-  // m.def("ewise_tanh", EwiseTanh);
+  m.def("ewise_log", EwiseLog);
+  m.def("ewise_exp", EwiseExp);
+  m.def("ewise_tanh", EwiseTanh);
 
-  // m.def("matmul", Matmul);
-  // m.def("matmul_tiled", MatmulTiled);
+  m.def("matmul", Matmul);
+  m.def("matmul_tiled", MatmulTiled);
 
-  // m.def("reduce_max", ReduceMax);
-  // m.def("reduce_sum", ReduceSum);
+  m.def("reduce_max", ReduceMax);
+  m.def("reduce_sum", ReduceSum);
 }
