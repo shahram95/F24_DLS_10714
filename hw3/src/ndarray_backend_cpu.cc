@@ -141,7 +141,29 @@ void ScalarSetitem(const size_t size, scalar_t val, AlignedArray* out, std::vect
    */
 
   /// BEGIN SOLUTION
-  assert(false && "Not Implemented");
+  
+  std::vector<int32_t> indices(shape.size(), 0);
+  size_t count = 0;
+
+  while (count < size) {
+    size_t out_idx = offset;
+    for (size_t i = 0; i < shape.size(); ++i) {
+      out_idx += indices[i] * strides[i];
+    }
+
+    out->ptr[out_idx] = val;
+    ++count;
+
+    for (int32_t i = shape.size() - 1; i >= 0; --i) {
+      if (++indices[i] < shape[i]) {
+        break;
+      }
+      indices[i] = 0;
+      if (i == 0) {
+        return;  // We've processed all elements
+      }
+    }
+  }
   /// END SOLUTION
 }
 

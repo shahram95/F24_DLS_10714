@@ -663,6 +663,8 @@ _Python_INCLUDE_DIR:INTERNAL=/home/gordian/anaconda3/envs/10714_env/include/pyth
 //Python Properties
 _Python_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;7;64;<none>;cpython-312-x86_64-linux-gnu;abi3;/home/gordian/anaconda3/envs/10714_env/lib/python3.12;/home/gordian/anaconda3/envs/10714_env/lib/python3.12;/home/gordian/anaconda3/envs/10714_env/lib/python3.12/site-packages;/home/gordian/anaconda3/envs/10714_env/lib/python3.12/site-packages
 _Python_INTERPRETER_SIGNATURE:INTERNAL=4836fe890142a6fc02b1e2a9c0151667
+//Interpreter reason failure
+_Python_Interpreter_REASON_FAILURE:INTERNAL=
 //Path to a library.
 _Python_LIBRARY_RELEASE:INTERNAL=/home/gordian/anaconda3/envs/10714_env/lib/libpython3.12.so
 //NumPy reason failure
