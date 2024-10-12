@@ -312,6 +312,16 @@ void EwiseDiv(const CudaArray& a, const CudaArray& b, CudaArray* out) {
   EwiseDivKernel<<<dim.grid, dim.block>>>(a.ptr, b.ptr, out->ptr, out->size);
 }
 
+__global__ void ScalarDivKernel(const scalar_t* a, scalar_t val, scalar_t* out, size_t size) {
+  size_t gid = blockIdx.x * blockDim.x + threadIdx.x;
+  if (gid < size) out[gid] = a[gid] / val;
+}
+
+void ScalarDiv(const CudaArray& a, scalar_t val, CudaArray* out) {
+  CudaDims dim = CudaOneDim(out->size);
+  ScalarDivKernel<<<dim.grid, dim.block>>>(a.ptr, val, out->ptr, out->size);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Elementwise and scalar operations
