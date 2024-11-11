@@ -1,0 +1,4 @@
+/home/gordian/Desktop/F24_DLS_10714/hw4_extra/build/CMakeFiles/ndarray_backend_cpu.dir
+/home/gordian/Desktop/F24_DLS_10714/hw4_extra/build/CMakeFiles/ndarray_backend_cuda.dir
+/home/gordian/Desktop/F24_DLS_10714/hw4_extra/build/CMakeFiles/edit_cache.dir
+/home/gordian/Desktop/F24_DLS_10714/hw4_extra/build/CMakeFiles/rebuild_cache.dir
